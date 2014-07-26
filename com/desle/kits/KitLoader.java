@@ -13,7 +13,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.desle.abilities.Ability;
 import com.desle.kitpvp.Main;
 
 public class KitLoader {
@@ -100,9 +99,6 @@ public class KitLoader {
 			String description = f.getString(key + "description");
 			int cost = f.getInt(key + "cost");
 			
-			Ability ability1 = Ability.valueOf(f.getString(key + "ability1").toUpperCase());
-			Ability ability2 = Ability.valueOf(f.getString(key + "ability2").toUpperCase());
-			
 			ItemStack item1 = loadItem(key + "item1");
 			ItemStack item2 = loadItem(key + "item2");
 			
@@ -113,7 +109,7 @@ public class KitLoader {
 			
 			
 			
-			new Kit(displayitem, name, description, cost, ability1, ability2, item1, item2, helmet, chestplate, leggings, boots);
+			new Kit(displayitem, name, description, cost, item1, item2, helmet, chestplate, leggings, boots);
 		}
 	}
 	

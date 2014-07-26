@@ -9,7 +9,6 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 
 import com.desle.kits.Kit;
-import com.desle.kits.gui.GUIManager;
 
 public class PlayerStorage {
 	

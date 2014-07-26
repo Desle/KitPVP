@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.desle.abilities.Ability;
-
 public class Kit {	
 	
 	
@@ -16,9 +14,6 @@ public class Kit {
 	private String name;
 	private String description;
 	private int cost;
-	
-	private Ability ability1;
-	private Ability ability2;
 	
 	private ItemStack item1;
 	private ItemStack item2;
@@ -38,9 +33,6 @@ public class Kit {
 			String description,
 			int cost,
 			
-			Ability ability1,
-			Ability ability2,
-			
 			ItemStack item1,
 			ItemStack item2,
 			
@@ -54,8 +46,6 @@ public class Kit {
 		this.name = name;
 		this.description = description;
 		this.cost = cost;
-		this.ability1 = ability1;
-		this.ability2 = ability2;
 		this.item1 = item1;
 		this.item2 = item2;
 		this.helmet = helmet;
@@ -88,14 +78,6 @@ public class Kit {
 	
 	public int getCost() {
 		return this.cost;
-	}
-	
-	public Ability getAbility1() {
-		return this.ability1;
-	}
-	
-	public Ability getAbility2() {
-		return this.ability2;
 	}
 	
 	public ItemStack getItem1() {
