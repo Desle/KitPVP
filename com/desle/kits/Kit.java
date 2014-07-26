@@ -12,6 +12,7 @@ public class Kit {
 	
 	public static List<Kit> list = new ArrayList<Kit>();
 	
+	private ItemStack displayitem;
 	private String name;
 	private String description;
 	private int cost;
@@ -32,6 +33,7 @@ public class Kit {
 //
 	public Kit(
 //
+			ItemStack displayitem,
 			String name,
 			String description,
 			int cost,
@@ -48,6 +50,7 @@ public class Kit {
 			ItemStack boots) {
 		
 		
+		this.displayitem = displayitem;
 		this.name = name;
 		this.description = description;
 		this.cost = cost;
@@ -71,6 +74,9 @@ public class Kit {
 	 */
 	
 	
+	public ItemStack getDisplayItem() {
+		return this.displayitem;
+	}
 	
 	public String getName() {
 		return this.name;

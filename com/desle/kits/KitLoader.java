@@ -95,7 +95,7 @@ public class KitLoader {
 			
 			String key = "kits." + name + ".";
 		
-			
+			ItemStack displayitem = loadItem(key + "displayitem");
 			
 			String description = f.getString(key + "description");
 			int cost = f.getInt(key + "cost");
@@ -113,7 +113,7 @@ public class KitLoader {
 			
 			
 			
-			new Kit(name, description, cost, ability1, ability2, item1, item2, helmet, chestplate, leggings, boots);
+			new Kit(displayitem, name, description, cost, ability1, ability2, item1, item2, helmet, chestplate, leggings, boots);
 		}
 	}
 	

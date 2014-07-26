@@ -9,11 +9,18 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 
 import com.desle.kits.Kit;
+import com.desle.kits.gui.GUIManager;
 
 public class PlayerStorage {
 	
 	
-	
+	private static PlayerStorage instance;
+	public static PlayerStorage getInstance() {
+		if (instance == null) 
+			instance = new PlayerStorage();
+		
+		return instance;
+	}
 	
 	
 	
