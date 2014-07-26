@@ -104,6 +104,8 @@ public class KitLoader {
 			ItemStack displayitem = loadItem(key + "displayitem");
 			
 			String description = f.getString(key + "description");
+			
+			int cooldown = f.getInt(key + "cooldown");
 			int cost = f.getInt(key + "cost");
 			
 			List<ItemStack> items = new ArrayList<ItemStack>();
@@ -117,7 +119,7 @@ public class KitLoader {
 			ItemStack leggings = loadItem(key + "leggings");
 			ItemStack boots = loadItem(key + "boots");
 			
-			new Kit(displayitem, name, description, cost, helmet, chestplate, leggings, boots, items);
+			new Kit(displayitem, cooldown, name, description, cost, helmet, chestplate, leggings, boots, items);
 		}
 	}
 	
@@ -126,8 +128,43 @@ public class KitLoader {
 	
 	
 	
-	public Kit getDefault() {		
-		return Kit.list.get(0);
+	public List<Kit> getDefault() {
+		
+		List<String> defs = getKitF().getStringList("defaultkits");
+		
+		List<Kit> kits = new ArrayList<Kit>();
+		
+		for (Kit kit : Kit.list) {
+			if (defs.contains(kit.getName())) {
+				kits.add(kit);
+			}
+		}
+		
+		return kits;
+	}
+	
+	
+	public Kit getKitByDisplayItem(ItemStack item) {
+		
+		ItemMeta im = item.getItemMeta();
+		
+		if (!im.hasLore()) return null;
+		if (!im.hasDisplayName()) return null;
+		
+		im.getLore().remove(im.getLore().size() - 1);
+		im.getLore().remove(im.getLore().size() - 1);
+		item.setItemMeta(im);
+		
+		for (Kit kit : Kit.list) {
+			
+			if (
+					kit.getDisplayItem().getItemMeta().getDisplayName().equals(item.getItemMeta().getDisplayName()) &&
+					kit.getDisplayItem().getType() == item.getType())
+			
+				return kit;
+		}
+		
+		return null;
 	}
 	
 	

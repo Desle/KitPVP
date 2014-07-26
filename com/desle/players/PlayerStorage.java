@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import com.desle.cooldown.CooldownManager;
 import com.desle.kitpvp.Main;
 import com.desle.kits.Kit;
 import com.desle.kits.KitLoader;
@@ -31,7 +32,7 @@ public class PlayerStorage {
 	}
 	
 	
-	
+	private Map<UUID, List<String>> cooldowns = new HashMap<UUID, List<String>>();
 	private Map<UUID, Kit> currentKit = new HashMap<UUID, Kit>();
 	private Map<UUID, List<Kit>> allKit = new HashMap<UUID, List<Kit>>();
 	private Map<UUID, Integer> balance = new HashMap<UUID, Integer>();
@@ -104,6 +105,16 @@ public class PlayerStorage {
 		allKit.put(player.getUniqueId(), kits);
 	}
 	
+	public void setCooldown(Player player, Kit kit) {
+		List<String> cds = new ArrayList<String>(cooldowns.get(player.getUniqueId()));
+		cds.add(kit.getName());
+		cooldowns.put(player.getUniqueId(), cds);
+		
+		CooldownManager cm = new CooldownManager(Main.getMain());
+		
+		cm.start(player, kit.getCooldown(), kit.getName());
+	}
+	
 	
 	
 	
@@ -146,7 +157,8 @@ public class PlayerStorage {
 		
 		if (f.getStringList(path + "owned") == null || f.getStringList(path + "owned").isEmpty()) {
 			
-			addKit(player, KitLoader.getInstance().getDefault());
+			for (Kit kit : KitLoader.getInstance().getDefault())
+				addKit(player, kit);
 			
 		} else {
 			for (String kitname : f.getStringList(path + "owned")) {
@@ -168,7 +180,7 @@ public class PlayerStorage {
 		
 		if (f.getString(path + "selected") == null) {
 			
-			setCurrentKit(player, KitLoader.getInstance().getDefault());
+			setCurrentKit(player, KitLoader.getInstance().getDefault().get(1));
 			
 		} else {
 			for (Kit kit : Kit.list) {
@@ -185,13 +197,79 @@ public class PlayerStorage {
 		// BALANCE
 		
 		balance.put(player.getUniqueId(), f.getInt(path + ".coins"));
+		
+		
+		
+		// COOLDOWNS
+		
+		List<String> ls = new ArrayList<String>();
+		
+		for (String cdk : f.getStringList(path + ".cooldowns")) {
+			
+			
+			String name = cdk.split("@")[1];
+			int time = Integer.parseInt(cdk.split("@")[0]);
+			
+			ls.add(name);
+			CooldownManager cm = new CooldownManager(Main.getMain());
+			cm.start(player, time, name);
+		}
+		
+		cooldowns.put(player.getUniqueId(), ls);
 	}
 	
 	
 	
 	
 	
-	
+	public void saveAll() {
+		FileConfiguration f = getPlayerF();
+		String path = "players.";
+		
+		for (UUID uuid : balance.keySet()) {
+			f.set(path + uuid.toString() + ".coins", balance.get(uuid));
+		}
+		
+		for (UUID uuid : currentKit.keySet()) {
+			f.set(path + uuid.toString() + ".selected", currentKit.get(uuid).getName());
+		}
+		
+		for (UUID uuid : allKit.keySet()) {
+			
+			List<String> owned = new ArrayList<String>();
+			
+			for (Kit kit : allKit.get(uuid)) {
+				owned.add(kit.getName());
+			}
+			
+			f.set(path + uuid.toString() + ".owned", owned);
+			
+		}
+		
+		
+		
+		// COOLDOWNS
+		
+		CooldownManager cm = new CooldownManager(Main.getMain());
+		
+		for (UUID uuid : cooldowns.keySet()) {
+			
+			List<String> newlist = new ArrayList<String>(cooldowns.get(uuid));
+			
+			List<String> tosave = new ArrayList<String>();
+			
+			for (String cdname : newlist) {
+				if (cm.isInCooldown(uuid, cdname)) {
+					tosave.add(cm.getTimeLeft(uuid, cdname) + "@" + cdname);
+				}
+			}
+			
+			f.set(path + uuid.toString() + ".cooldowns", tosave);
+			
+		}
+		
+		savePlayerF();
+	}
 	
 	
 	
