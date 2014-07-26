@@ -3,6 +3,8 @@ package com.desle.kits;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
@@ -31,16 +33,20 @@ public class KitLoader {
 	private ItemStack loadItem(String path) {
 		FileConfiguration f = getKitF();
 		
+		if (f.get(path) == null) {
+			return new ItemStack(Material.AIR);
+		}
+		
 		ItemStack item = new ItemStack(Material.matchMaterial(f.getString(path + ".material").toUpperCase()));
 		
 		
 		/*
 		 * 
 		 * USUAL CRAP */
-		if (!(f.getInt(path + ".amount") <= 0)) {
+		if (f.get(path + ".amount") != null) {
 			item.setAmount(f.getInt(path + ".amount"));
 		}
-		if (!(f.getInt(path + ".durability") <= 0)) {
+		if (f.get(path + ".durability") != null) {
 			item.setDurability((short) f.getInt(path + ".durability"));
 		}
 		
@@ -87,6 +93,7 @@ public class KitLoader {
 	 * 
 	 */
 	
+	
 	public void loadKits() {
 		
 		FileConfiguration f = getKitF();
@@ -99,18 +106,28 @@ public class KitLoader {
 			String description = f.getString(key + "description");
 			int cost = f.getInt(key + "cost");
 			
-			ItemStack item1 = loadItem(key + "item1");
-			ItemStack item2 = loadItem(key + "item2");
+			List<ItemStack> items = new ArrayList<ItemStack>();
+			
+			for (String k : f.getConfigurationSection(key + "items").getKeys(false)) {
+				items.add(loadItem(key + "items" + k));
+			}
 			
 			ItemStack helmet = loadItem(key + "helmet");
 			ItemStack chestplate = loadItem(key + "chestplate");
 			ItemStack leggings = loadItem(key + "leggings");
 			ItemStack boots = loadItem(key + "boots");
 			
-			
-			
-			new Kit(displayitem, name, description, cost, item1, item2, helmet, chestplate, leggings, boots);
+			new Kit(displayitem, name, description, cost, helmet, chestplate, leggings, boots, items);
 		}
+	}
+	
+	
+	
+	
+	
+	
+	public Kit getDefault() {		
+		return Kit.list.get(0);
 	}
 	
 	

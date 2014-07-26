@@ -15,15 +15,12 @@ public class Kit {
 	private String description;
 	private int cost;
 	
-	private ItemStack item1;
-	private ItemStack item2;
-	
 	private ItemStack helmet;
 	private ItemStack chestplate;
 	private ItemStack leggings;
 	private ItemStack boots;
 	
-	
+	private List<ItemStack> items;
 	
 //
 	public Kit(
@@ -33,25 +30,24 @@ public class Kit {
 			String description,
 			int cost,
 			
-			ItemStack item1,
-			ItemStack item2,
-			
 			ItemStack helmet,
 			ItemStack chestplate,
 			ItemStack leggings,
-			ItemStack boots) {
+			ItemStack boots,
+			
+			List<ItemStack> items) {
 		
 		
 		this.displayitem = displayitem;
 		this.name = name;
 		this.description = description;
 		this.cost = cost;
-		this.item1 = item1;
-		this.item2 = item2;
 		this.helmet = helmet;
 		this.chestplate = chestplate;
 		this.leggings = leggings;
 		this.boots = boots;
+		
+		this.items = items;
 		
 		list.add(this);
 	}	
@@ -80,12 +76,8 @@ public class Kit {
 		return this.cost;
 	}
 	
-	public ItemStack getItem1() {
-		return this.item1;
-	}
-	
-	public ItemStack getItem2() {
-		return this.item2;
+	public List<ItemStack>getItems() {
+		return this.items;
 	}
 	
 	public ItemStack getHelmet() {
